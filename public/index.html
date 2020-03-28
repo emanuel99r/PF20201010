@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Robot</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+  <style>
+    .contenedor{
+     width: 400px;  
+    }
+  </style>
+
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark d-flex justify-content-between">
+      <a class="navbar-brand" href="#">Accionamiento brazo robótico</a>
+    </nav>
+    <div class="container " >
+      <div class="row justify-content-center">
+        <div class="contenedor">
+          <img src="imagen.jpg" class="img-fluid"  class="img-rounded">
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <br><br>
+      <div class="row">
+        <div class="col">
+          <h4>Digite los grados de movimiento</h4>
+        </div>
+      </div>
+      <br>
+      <div>
+      <div class="row">  
+
+
+        <pre>  </pre><h5>Rango[</h5><h5 id="lim_1_inf"></h5><h5>,</h5><h5 id="lim_1_sup"></h5><h5>]</h5>
+        <pre>                               </pre><h5>Rango[</h5><h5 id="lim_2_inf"></h5><h5>,</h5><h5 id="lim_2_sup"></h5><h5>]</h5>
+        <pre>                               </pre><h5>Rango[</h5><h5 id="lim_3_inf"></h5><h5>,</h5><h5 id="lim_3_sup"></h5><h5>]</h5>            
+        
+        </div>
+      <div class="row">
+        <div class="col">
+          <input class="form-control" id="motor1" placeholder="Grados motor 1">
+        </div>
+        <div class="col">
+          <input class="form-control" id="motor2" placeholder="Grados motor 2">
+        </div>
+        <div class="col">
+          <input class="form-control" id="motor3" placeholder="Grados motor 3">
+        </div>
+      </div>
+    
+     
+        <div class = "row">
+        
+          <div class = "row" >
+            <pre>    </pre><h6>Encoder 1:</h6> <pre>  </pre>
+          </div>
+          <div class = "col" >
+            <h6 id="contador_1"></h6>
+          </div>
+          <div class = "row" >
+            <pre>    </pre><h6>Encoder 2:</h6><pre>  </pre>
+          </div>
+          <div class = "col" >
+            <h6 id="contador_2"></h6>
+          </div>
+          <div class = "row" >
+            <pre>    </pre><h6>Encoder 3:</h6><pre>  </pre>
+          </div>
+          <div class = "col">
+            <h6 id="contador_3"></h6>
+          </div>                
+        
+        </div>
+        <div class="row">  
+
+
+          <pre>  </pre><h5>Rango[</h5><h5 id="lim_4_inf"></h5><h5>,</h5><h5 id="lim_4_sup"></h5><h5>]</h5>
+          <pre>                               </pre><h5>Rango[</h5><h5 id="lim_5_inf"></h5><h5>,</h5><h5 id="lim_5_sup"></h5><h5>]</h5>
+          <pre>                               </pre><h5>Rango[</h5><h5 id="lim_6_inf"></h5><h5>,</h5><h5 id="lim_6_sup"></h5><h5>]</h5>            
+  
+          </div>     
+      <div class="row">
+        <div class="col">
+          <input class="form-control" id="motor4" placeholder="Grados motor 4">
+        </div>
+        <div class="col">
+          <input class="form-control" id="motor5" placeholder="Grados motor 5">
+        </div>
+        <div class="col">
+          <input class="form-control" id="motor6" placeholder="Grados motor 6">
+        </div>
+      </div>
+     
+      <div class = "row">
+        
+        <div class = "row" >
+          <pre>    </pre><h6>Encoder 4:</h6><pre>  </pre>
+        </div>
+        <div class = "col" >
+          <h6 id="contador_4"></h5>
+        </div>
+        <div class = "row" >
+          <pre>    </pre><h6>Encoder 5:</h6><pre>  </pre>
+        </div>
+        <div class = "col" >
+          <h6 id="contador_5"></h6>
+        </div>
+        <div class = "row" >
+          <pre>    </pre><h6>Encoder 6:</h6><pre>  </pre>
+        </div>
+        <div class = "col">
+          <h6 id="contador_6"></h6>
+        </div>                
+      
+      </div>
+
+      
+       <br><br>
+      <div class="row">
+        <div class="col">
+          <button type="button" class="btn btn-block btn-info" id="enviarGrados" >Enviar Grados</button>
+        </div>
+      </div>  
+      <br>
+      <div class="row">
+        <div class="col">
+          <button type="button" class="btn btn-block btn-warning" id="Home" >Posición Home</button>
+        </div>
+      </div>
+    </div>
+
+
+      
+   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" charset="utf-8"></script>
+      <script>
+        const socket =io();
+        var lim_1_inf=document.getElementById("lim_1_inf");
+        var lim_1_sup=document.getElementById("lim_1_sup");
+        var lim_2_inf=document.getElementById("lim_2_inf");
+        var lim_2_sup=document.getElementById("lim_2_sup");
+        var lim_3_inf=document.getElementById("lim_3_inf");
+        var lim_3_sup=document.getElementById("lim_3_sup");
+        var lim_4_inf=document.getElementById("lim_4_inf");
+        var lim_4_sup=document.getElementById("lim_4_sup");
+        var lim_5_inf=document.getElementById("lim_5_inf");
+        var lim_5_sup=document.getElementById("lim_5_sup");
+        var lim_6_inf=document.getElementById("lim_6_inf");
+        var lim_6_sup=document.getElementById("lim_6_sup");        
+        var contador_1=document.getElementById("contador_1");
+        var contador_2=document.getElementById("contador_2");
+        var contador_3=document.getElementById("contador_3");
+        var contador_4=document.getElementById("contador_4");
+        var contador_5=document.getElementById("contador_5");        
+        var contador_6=document.getElementById("contador_6");        
+        var motor1=document.getElementById("motor1");
+        var motor2=document.getElementById("motor2");
+        var motor3=document.getElementById("motor3");
+        var motor4=document.getElementById("motor4");
+        var motor5=document.getElementById("motor5");
+        var motor6=document.getElementById("motor6");
+        var boton=document.getElementById("enviarGrados");
+        var botonHome=document.getElementById("Home");
+        
+
+          //enviar indicacion al server cuando se presione home
+        botonHome.addEventListener('click',function(){
+          socket.emit('posicionHome')
+        });  
+          //enviar grados al server
+        boton.addEventListener('click',function(){
+          var arr = [motor1.value,motor2.value,motor3.value,motor4.value,motor5.value,motor6.value];
+          socket.emit('enviarGrados',arr);
+
+      });
+
+          socket.on('message',(contador2)=>{
+             console.log(contador2)
+           contador_1.innerHTML=contador2;
+           contador_2.innerHTML=contador2;
+           contador_3.innerHTML=contador2;
+           contador_4.innerHTML=contador2;
+           contador_5.innerHTML=contador2;
+           contador_6.innerHTML=contador2;
+          });
+          socket.on('lim_1_inf',(inf_l1)=>{
+            console.log(inf_l1)
+           lim_1_inf.innerHTML=inf_l1;
+           lim_3_inf.innerHTML=inf_l1;
+           lim_4_inf.innerHTML=inf_l1;
+           lim_5_inf.innerHTML=inf_l1;
+           lim_6_inf.innerHTML=inf_l1;
+             
+          });   
+          socket.on('lim_1_sup',(sup_l1)=>{
+            console.log(sup_l1)
+           lim_1_sup.innerHTML=sup_l1;
+           lim_3_sup.innerHTML=sup_l1;
+           lim_4_sup.innerHTML=sup_l1;
+           lim_5_sup.innerHTML=sup_l1;
+           lim_6_sup.innerHTML=sup_l1;  
+          });
+
+          socket.on('lim_2_inf',(inf_l2)=>{
+            console.log(inf_l2)
+           lim_2_inf.innerHTML=inf_l2;
+          });   
+          socket.on('lim_2_sup',(sup_l2)=>{
+            console.log(sup_l2)
+           lim_2_sup.innerHTML=sup_l2; 
+          }); 
+
+
+          socket.on('outRange',()=>{
+             window.alert('digite un numero dentro del rango')
+          });
+          socket.on('typeError',()=>{
+             window.alert('digite un numero real')
+          });
+
+
+</script>
+   
+        
+  </body>
+
+
+</html>
